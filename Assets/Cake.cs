@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Cake : MonoBehaviour
 {
+    private static int cakeCount = 0;   // is this ok with monobehaviour, how do threads work with unity/monobehaviour/hit detection??
+
     public float StartForceIntensity;
     public int NextCakeCount;
     public GameObject NextCake;
@@ -26,6 +26,8 @@ public class Cake : MonoBehaviour
 
         _rb.AddForce(new Vector2(x,y), ForceMode2D.Impulse);
         _rb.AddTorque(spin, ForceMode2D.Impulse);
+
+        cakeCount++;
     }
 
     void OnMouseOver()
@@ -40,11 +42,23 @@ public class Cake : MonoBehaviour
 
         if(NextCake != null)
         {
+            // next 'level'
             for(var i = 0; i < NextCakeCount; i++)
                 Instantiate(NextCake, _rb.position, Quaternion.identity);
         }
+        else
+        {
+            // no more levels - are we the last cake - for the win?
+            if (cakeCount == 1)
+            {
+                Debug.Log("WIN!!");
+                FindObjectOfType<GameControl>().Win();
+            }
+                
+        }
 
         // do splatter...
+        cakeCount--;
         Destroy(gameObject);
     }
 }
