@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System;
 
 namespace TMPro.Examples
 {
@@ -10,15 +10,28 @@ namespace TMPro.Examples
 
         private TMP_Text m_TextComponent;
 
+        private Coroutine vertexAnimation = null;
+
         void Awake()
         {
             m_TextComponent = GetComponent<TMP_Text>();
         }
 
+        void OnEnable()
+        {
+            if (vertexAnimation != null)
+                StopCoroutine(vertexAnimation);
+            vertexAnimation = StartCoroutine(AnimateVertexColors());
+        }
 
+        void OnDisable()
+        {
+            StopCoroutine(vertexAnimation);
+        }
+        
         void Start()
         {
-            StartCoroutine(AnimateVertexColors());
+        //    StartCoroutine(AnimateVertexColors());
         }
 
 
@@ -37,6 +50,8 @@ namespace TMPro.Examples
             Color32[] newVertexColors;
             Color32 c0 = m_TextComponent.color;
 
+            bool haveColoured = false;
+            bool inited = false;    // ensure we colour all characters before start
             while (true)
             {
                 int characterCount = textInfo.characterCount;
@@ -60,7 +75,7 @@ namespace TMPro.Examples
                 // Only change the vertex color if the text element is visible.
                 if (textInfo.characterInfo[currentCharacter].isVisible)
                 {
-                    c0 = new Color32((byte)Random.Range(0, 255), (byte)Random.Range(0, 255), (byte)Random.Range(0, 255), 255);
+                    c0 = new Color32((byte)UnityEngine.Random.Range(0, 255), (byte)UnityEngine.Random.Range(0, 255), (byte)UnityEngine.Random.Range(0, 255), 255);
 
                     newVertexColors[vertexIndex + 0] = c0;
                     newVertexColors[vertexIndex + 1] = c0;
@@ -72,6 +87,22 @@ namespace TMPro.Examples
 
                     // This last process could be done to only update the vertex data that has changed as opposed to all of the vertex data but it would require extra steps and knowing what type of renderer is used.
                     // These extra steps would be a performance optimization but it is unlikely that such optimization will be necessary.
+               
+                    // pw: ensure we have 'coloured everyting' once
+                    if(!haveColoured)
+                    {
+                        haveColoured = true;
+                        currentCharacter = 0;
+                        continue;
+                    }
+
+                    inited = inited || (currentCharacter + 1) == characterCount;
+                    if (!inited)
+                    {
+                        currentCharacter++;
+                        Debug.Log($"Inited character {currentCharacter} (of {characterCount})");
+                        continue;
+                    }
                 }
 
                 currentCharacter = (currentCharacter + 1) % characterCount;

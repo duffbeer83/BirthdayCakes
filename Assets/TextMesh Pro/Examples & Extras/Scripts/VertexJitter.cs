@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System;
 
 namespace TMPro.Examples
 {
@@ -15,6 +15,8 @@ namespace TMPro.Examples
         private TMP_Text m_TextComponent;
         private bool hasTextChanged;
 
+        private Coroutine vertexAnimation = null;
+
         /// <summary>
         /// Structure to hold pre-computed animation data.
         /// </summary>
@@ -27,28 +29,32 @@ namespace TMPro.Examples
 
         void Awake()
         {
-            m_TextComponent = GetComponent<TMP_Text>();
+            m_TextComponent = gameObject.GetComponent<TMP_Text>();
         }
 
         void OnEnable()
         {
             // Subscribe to event fired when text object has been regenerated.
             TMPro_EventManager.TEXT_CHANGED_EVENT.Add(ON_TEXT_CHANGED);
+
+            if (vertexAnimation != null)
+                StopCoroutine(vertexAnimation);
+            vertexAnimation = StartCoroutine(AnimateVertexColors());
         }
 
         void OnDisable()
         {
+            StopCoroutine(vertexAnimation);
             TMPro_EventManager.TEXT_CHANGED_EVENT.Remove(ON_TEXT_CHANGED);
         }
 
-
         void Start()
         {
-            StartCoroutine(AnimateVertexColors());
+            
+            //StartCoroutine(AnimateVertexColors());
         }
 
-
-        void ON_TEXT_CHANGED(Object obj)
+        void ON_TEXT_CHANGED(object obj)
         {
             if (obj == m_TextComponent)
                 hasTextChanged = true;
@@ -60,7 +66,6 @@ namespace TMPro.Examples
         /// <returns></returns>
         IEnumerator AnimateVertexColors()
         {
-
             // We force an update of the text object since it would only be updated at the end of the frame. Ie. before this code is executed on the first frame.
             // Alternatively, we could yield and wait until the end of the frame when the text object will be generated.
             m_TextComponent.ForceMeshUpdate();
@@ -76,8 +81,8 @@ namespace TMPro.Examples
             VertexAnim[] vertexAnim = new VertexAnim[1024];
             for (int i = 0; i < 1024; i++)
             {
-                vertexAnim[i].angleRange = Random.Range(10f, 25f);
-                vertexAnim[i].speed = Random.Range(1f, 3f);
+                vertexAnim[i].angleRange = UnityEngine.Random.Range(10f, 25f);
+                vertexAnim[i].speed = UnityEngine.Random.Range(1f, 3f);
             }
 
             // Cache the vertex data of the text object as the Jitter FX is applied to the original position of the characters.
@@ -140,10 +145,10 @@ namespace TMPro.Examples
                     destinationVertices[vertexIndex + 2] = sourceVertices[vertexIndex + 2] - offset;
                     destinationVertices[vertexIndex + 3] = sourceVertices[vertexIndex + 3] - offset;
 
-                    vertAnim.angle = Mathf.SmoothStep(-vertAnim.angleRange, vertAnim.angleRange, Mathf.PingPong(loopCount / 25f * vertAnim.speed, 1f));
-                    Vector3 jitterOffset = new Vector3(Random.Range(-.25f, .25f), Random.Range(-.25f, .25f), 0);
+                   vertAnim.angle = Mathf.SmoothStep(-vertAnim.angleRange, vertAnim.angleRange, Mathf.PingPong(loopCount / 25f * vertAnim.speed, 1f));
+                    Vector3 jitterOffset = new Vector3(UnityEngine.Random.Range(-.25f, .25f), UnityEngine.Random.Range(-.25f, .25f), 0);
 
-                    matrix = Matrix4x4.TRS(jitterOffset * CurveScale, Quaternion.Euler(0, 0, Random.Range(-5f, 5f) * AngleMultiplier), Vector3.one);
+                    matrix = Matrix4x4.TRS(jitterOffset * CurveScale, Quaternion.Euler(0, 0, UnityEngine.Random.Range(-5f, 5f) * AngleMultiplier), Vector3.one);
 
                     destinationVertices[vertexIndex + 0] = matrix.MultiplyPoint3x4(destinationVertices[vertexIndex + 0]);
                     destinationVertices[vertexIndex + 1] = matrix.MultiplyPoint3x4(destinationVertices[vertexIndex + 1]);

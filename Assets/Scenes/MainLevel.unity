@@ -890,7 +890,7 @@ PrefabInstance:
     - target: {fileID: 2966359335936252567, guid: 36f466115d97d654ea463a7e02ff56e3,
         type: 3}
       propertyPath: m_Name
-      value: AnimatingText
+      value: Text-AnimatingWin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36f466115d97d654ea463a7e02ff56e3, type: 3}
