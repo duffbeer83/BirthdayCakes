@@ -73,12 +73,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b71aed5f3c91a344ab62de96657bc180, type: 3}
-  m_Color: {r: 0, g: 0.9073796, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: a73139efa60df0d48bd059bcdf37a0f3, type: 3}
+  m_Color: {r: 0.9339623, g: 0.9339623, b: 0.9339623, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 6.4, y: 8.53}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -137,3 +137,4 @@ MonoBehaviour:
   NextCakeCount: 3
   NextCake: {fileID: 8622417792566009454, guid: e68bc567292985149ada6bd484ab42d6,
     type: 3}
+  Splat: {fileID: 6081860713600804339, guid: ae3d066a514a6eb4fa73d6ee600e7e82, type: 3}

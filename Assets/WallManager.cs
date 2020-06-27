@@ -42,8 +42,8 @@ public class WallManager : MonoBehaviour
 
         // calc and position walls
         Debug.Log($"Bottom Left: {bottomLeft.x}, {bottomLeft.y}, {bottomLeft.z}");
-        Left.transform.SetPositionAndRotation(new Vector3(bottomLeft.x - 0.5f, 0), Quaternion.identity);
-        Right.transform.SetPositionAndRotation(new Vector3(bottomLeft.x * -1 + 0.5f, 0), Quaternion.identity);
+        Left.transform.SetPositionAndRotation(new Vector3(bottomLeft.x, 0, Left.transform.position.z), Quaternion.identity);
+        Right.transform.SetPositionAndRotation(new Vector3(bottomLeft.x * -1, 0, Left.transform.position.z), Quaternion.identity);
 
         // capture new camera size
         //_lastBottomLeft = bottomLeft;
