@@ -56,20 +56,32 @@ public class GameControl : MonoBehaviour
         }
     }
 
-    public void StartGame()
+    public void Intro()
     {
-        _mode = GameMode.GameScreen;
+        _mode = GameMode.StartScreen;
 
         _audioMgr.ScalePitch("theme", 1f);
 
-        StartMenuUI.SetActive(false);
+        StartMenuUI.SetActive(true);
         PauseMenuUI.SetActive(false);
-
-        foreach (Transform child in _splatFolder.transform)
-            GameObject.Destroy(child.gameObject);
 
         foreach (var we in _winEffects)
             we.SetActive(false);
+    }
+
+
+    public void StartGame()
+    {
+        _mode = GameMode.GameScreen;
+        
+        StartMenuUI.SetActive(false);
+        PauseMenuUI.SetActive(false);
+
+        foreach (var we in _winEffects)
+            we.SetActive(false);
+
+        foreach (Transform child in _splatFolder.transform)
+            GameObject.Destroy(child.gameObject);
 
         Instantiate(StartingCake, new Vector3(0,0,0), Quaternion.identity);
     }
@@ -80,6 +92,7 @@ public class GameControl : MonoBehaviour
 
         _audioMgr.ScalePitch("theme", 1f);
 
+        StartMenuUI.SetActive(false);
         PauseMenuUI.SetActive(true);
     }
 }
