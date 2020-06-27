@@ -11,12 +11,17 @@ public class GameControl : MonoBehaviour
     private GameObject _splatFolder;
     private AudioManager _audioMgr;
 
+    private int _lastEffectIdx = 0;
+    private GameObject[] _winEffects;
+
     private GameMode _mode = GameMode.StartScreen;
 
     void Awake()
     {
         _splatFolder = GameObject.FindWithTag("SplatFolder");
         _audioMgr = GameObject.FindObjectOfType<AudioManager>();
+
+        _winEffects = GameObject.FindGameObjectsWithTag("win");
     }
 
     private void Update()
@@ -33,6 +38,19 @@ public class GameControl : MonoBehaviour
                     _audioMgr.Play("click");
                     break;
                 case GameMode.WinScreen:
+                    if(_winEffects.Length > 0)
+                    {
+                        _winEffects[_lastEffectIdx].SetActive(true);
+                        var t = _winEffects[_lastEffectIdx].transform;
+                        var newPos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, t.position.z);
+                        Debug.Log($"update location - current position = {t.position.x}, {t.position.y}; new = {newPos.x}, {newPos.y}");
+
+                        t.position = newPos;
+                        _lastEffectIdx++;
+                        if (_lastEffectIdx >= _winEffects.Length)
+                            _lastEffectIdx = 0;
+                    }
+
                     break;
             }
         }
@@ -49,7 +67,10 @@ public class GameControl : MonoBehaviour
 
         foreach (Transform child in _splatFolder.transform)
             GameObject.Destroy(child.gameObject);
-        
+
+        foreach (var we in _winEffects)
+            we.SetActive(false);
+
         Instantiate(StartingCake, new Vector3(0,0,0), Quaternion.identity);
     }
 
